@@ -1,0 +1,743 @@
+{
+	"info": {
+		"_postman_id": "9f2b4ba1-f9e5-4b7d-b81d-18c80a4c9baa",
+		"name": "Test-ChangeClientsData_positive",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01_login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "92ca5c00-399a-4372-a5ea-2baf329121a3",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.environment.set(\"my_cookie\", responseCookies);\r",
+							"let time = pm.variables.get(\"utcnow\");\r",
+							"console.log(\"Test time: \" + time);\r",
+							"console.log(\"Coocies received: \");\r",
+							"console.log( pm.environment.get(\"my_cookie\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "time_zone",
+							"value": "Asia/Jerusalem",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "aa@aa.aa",
+							"type": "text"
+						},
+						{
+							"key": "pass",
+							"value": "bestappever",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/check-login",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"check-login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b9b0451-2c1a-4acf-9a02-895f14aacb3f",
+						"exec": [
+							"",
+							"let JsonData = pm.response.json();",
+							"console.log(\"New test client, number: \" + JsonData + \" was created\");",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_Test-Before-#№$₽*!+/»)_-:){[%π±¦¶°¬~^½@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_changeClientsData яש@#№$₽* !+/»)_-:){[%π±¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03_check number of temp client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75fe30c7-a633-4bb9-a97c-ca3db3494b10",
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"let iDs = jsonData.map((i) => i.id);\r",
+							"\r",
+							"pm.test(\"Number a new clients 'Test_changeClientsData' equal 1 \", function () {\r",
+							"    pm.expect(iDs.length).to.eql(1);\r",
+							"\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_changeClientsData",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "q",
+							"value": "Test_changeClientsData"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04_count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75fe30c7-a633-4bb9-a97c-ca3db3494b10",
+						"exec": [
+							"let JsonData = pm.response.json();\r",
+							"let iDs = JsonData.map((i) => i.id);\r",
+							"console.log(\"iDs = \" + iDs); \r",
+							"\r",
+							"pm.environment.set(\"IdArray_clients\", JSON.stringify(iDs));\r",
+							"\r",
+							"if(iDs.length === 0)\r",
+							"{\r",
+							"\r",
+							"    postman.setNextRequest(\"null\");\r",
+							"    \r",
+							"}\r",
+							"else\r",
+							"{\r",
+							"    pm.environment.set(\"count\", 0);\r",
+							"}\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_changeClientsData",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "q",
+							"value": "Test_changeClientsData"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05_check data of temp client",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "58ca38ad-d3b0-4961-86e5-4dc6ad9ca480",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray_clients\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[0]);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "aa9e4b68-59ab-4951-9565-3bcc14d56ff1",
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Clients email\" , function () {\r",
+							"    pm.expect(jsonData.email).to.eql(\"QA_Test-Before-#№$₽*!+/»)_-:){[%π±¦¶°¬~^½@gmail.com\");\r",
+							"\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Client name\" , function () {\r",
+							"    pm.expect(jsonData.name).to.eql(\"Test_createClient яש@#№$₽* !+/»)_-:){[%π±¦¶°¬~^½\");\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client status\" , function () {\r",
+							"   pm.expect(jsonData.status).to.eql(\"status - ячс שדג @#№$₽* !+/»)_-:) {[%π±|¦¶°¬~^½\");\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client phone\" , function () {\r",
+							"      pm.expect(jsonData.phone).to.eql([\"0547613154\"]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client gender\" , function () {\r",
+							"      pm.expect(jsonData.gender).to.eql(\"male\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client birthyear\" , function () {\r",
+							"      pm.expect(jsonData.birthyear).to.eql(\"1981\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client birthdate\" , function () {\r",
+							"      pm.expect(jsonData.birthdate).to.eql(\"06-26\");\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client address\" , function () {\r",
+							"      pm.expect(jsonData.address).to.eql(\"רמת גן, גליל 18 Israel\");\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06_change temp client data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d213ed45-2f6b-409f-b3b5-3dd5dcacc8c4",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray_clients\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[0]);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0093a0c5-aae9-438c-8cf1-c718c46ab030",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "birthdate",
+							"value": "03-01",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1991",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "female",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status after change",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " рамат ган 18",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "акакий акакиевич טסט ",
+							"type": "text"
+						},
+						{
+							"key": "permit_ads",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_Test-After@mail.ru",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07_check number of old temp client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75fe30c7-a633-4bb9-a97c-ca3db3494b10",
+						"exec": [
+							"pm.test(\"Old temp client was changed\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql([]);",
+							"    console.log(\"Temp client 'Test_createClient_', do not exists\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_changeClientsData",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "q",
+							"value": "Test_changeClientsData"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08_check data of temp client after change",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "58ca38ad-d3b0-4961-86e5-4dc6ad9ca480",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray_clients\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[0]);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "aa9e4b68-59ab-4951-9565-3bcc14d56ff1",
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"\r",
+							"pm.test(\"Clients name\" , function () {\r",
+							"    pm.expect(jsonData.name).to.eql(\"акакий акакиевич טסט\");\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Clients email\" , function () {\r",
+							"    pm.expect(jsonData.email).to.eql(\"QA_Test-After@mail.ru\");\r",
+							"\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Client status\" , function () {\r",
+							"   pm.expect(jsonData.status).to.eql(\"status after change\");\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client phone\" , function () {\r",
+							"      pm.expect(jsonData.phone).to.eql([\"0547613154\"]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client gender\" , function () {\r",
+							"      pm.expect(jsonData.gender).to.eql(\"female\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client birthyear\" , function () {\r",
+							"      pm.expect(jsonData.birthyear).to.eql(\"1991\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client birthdate\" , function () {\r",
+							"      pm.expect(jsonData.birthdate).to.eql(\"03-01\");\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client address\" , function () {\r",
+							"      pm.expect(jsonData.address).to.eql(\"рамат ган 18\");\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09_delete temp client",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "864291c5-7c58-4fd5-9bb7-5d5739a75db8",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray_clients\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[0]);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8af8f359-eda8-4e93-9906-7b70f1663169",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Old client was deleted\", function () {",
+							"    pm.response.to.have.body(\"\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10_Check temp client deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79de03ff-ac6a-425d-82b2-8cb5b060aebb",
+						"exec": [
+							" ",
+							" ",
+							"pm.test(\"Temp clients was deleted\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql([]);",
+							"   ",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&q=акакий акакиевич טסט ",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "q",
+							"value": "акакий акакиевич טסט "
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

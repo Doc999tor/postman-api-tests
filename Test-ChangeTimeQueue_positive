@@ -1,0 +1,824 @@
+{
+	"info": {
+		"_postman_id": "8b92cd45-5ad5-410e-b833-563895e91dda",
+		"name": "Test-ChangeTimeQueue_positive",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01_Login_positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab80aa2a-1bfc-4054-9f82-636063b5951e",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.environment.set(\"my_cookie\", responseCookies);\r",
+							"let time = pm.variables.get(\"utcnow\");\r",
+							"\r",
+							"console.log(\"Coocies received: \");\r",
+							"console.log( pm.environment.get(\"my_cookie\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "time_zone",
+							"value": "Asia/Jerusalem",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "aa@aa.aa",
+							"type": "text"
+						},
+						{
+							"key": "pass",
+							"value": "bestappever",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/check-login",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"check-login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02_Count_positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11da201c-760f-4cfe-8c05-a0181e96a857",
+						"exec": [
+							"let JsonData = pm.response.json();\r",
+							"let iDs = JsonData.map((i) => i.id);\r",
+							"console.log(\"iDs = \" + iDs); \r",
+							"pm.environment.set(\"IdArray\", JSON.stringify(iDs));\r",
+							"\r",
+							"if(iDs.length === 0)\r",
+							"{\r",
+							"    postman.setNextRequest(\"04_CreateQueue-12am_positive\");//next request will not be sent\r",
+							"}\r",
+							"else\r",
+							"{\r",
+							"    pm.environment.set(\"count\", 0);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03_DeleteAllQueues_positive",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "864291c5-7c58-4fd5-9bb7-5d5739a75db8",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[count]);",
+							"console.log(\"Appointments before delete: \" + iDs);",
+							"",
+							"count = count + 1; //next iteration",
+							"",
+							"if(count < iDs.length)",
+							"{",
+							"    postman.setNextRequest(\"03_DeleteAllQueues_positive\");",
+							"}",
+							"else ",
+							"{",
+							"    postman.setNextRequest(\"04_CreateQueue-12am_positive\"); // or next request name",
+							"} ",
+							"pm.environment.set(\"count\", count);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8af8f359-eda8-4e93-9906-7b70f1663169",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04_create temp client",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b9b0451-2c1a-4acf-9a02-895f14aacb3f",
+						"exec": [
+							"",
+							"let JsonData = pm.response.json();",
+							"console.log(\"New test client, Test_changeTimeQueue: \" + JsonData + \" was created\");",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_changeTimeQueue_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "zxcvbnmasdfghjklqwertyuiop 1234567890 !@#$%^&*()_+<>?:{}|",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05_Get id of \"Test_changeTimeQueue\" client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79de03ff-ac6a-425d-82b2-8cb5b060aebb",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							"",
+							" pm.environment.set(\"tempClient\", jsonData[0].id);",
+							" var t = pm.environment.get(\"tempClient\");",
+							" ",
+							" ",
+							"pm.test(\"New client for change data test - 'Test_changeTimeQueue' was created\", function () {",
+							"    pm.expect(jsonData[0].name).to.eql(\"Test_changeTimeQueue\");",
+							"    console.log(jsonData[0].name + \" client exists now\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test_changeTimeQueue",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "q",
+							"value": "Test_changeTimeQueue"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06_CreateQueue-12am_positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "37c122a3-bb93-461d-89f3-1a6d1d11fcd8",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T12:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": " [{\"id\":6,\"name\":\"פסים קצר 180 +שעה המתנה\",\"price\":\"180\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"כימיה\",\"id\":3},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "{{utcnow}}",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07_Check12pmQueue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1dce3954-fba0-4ae3-861f-252af70c4f6f",
+						"exec": [
+							"var JsonData = pm.response.json();",
+							"pm.environment.set(\"delete_id\", JsonData[0].id);",
+							"",
+							" postman.setNextRequest(\"06_ChangeStartTime_positive\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "324775a2-f917-4c10-af2e-b30a26ed82c4",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08_ChangeStartTime_positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "706a987b-b634-4ee9-8685-114d2bce7377",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}09:00:00",
+							"type": "text"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}19:00:00",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{delete_id}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{delete_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09_ChangeEndTime_positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "706a987b-b634-4ee9-8685-114d2bce7377",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}09:00:00",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}19:00:00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{delete_id}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{delete_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10_CheckTime_positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09cc6b4a-10bb-4205-ba75-b6236f38bd32",
+						"exec": [
+							"",
+							"",
+							"pm.test(\"Start appointment is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].start).to.eql(pm.environment.get(\"appointment_day\") + \" 09:00\");",
+							"});",
+							"",
+							"pm.test(\"End appointment is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].end).to.eql(pm.environment.get(\"appointment_day\") + \" 19:00\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11_Delete Temp client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f0a702b7-67e6-4825-a50f-081609330510",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients/{{tempClient}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients",
+						"{{tempClient}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "12_Check temp client deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79de03ff-ac6a-425d-82b2-8cb5b060aebb",
+						"exec": [
+							" ",
+							" ",
+							"pm.test(\"Temp client was deleted\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql([]);",
+							"    console.log(\"Temp client 'Test_changeTimeQueue', was deleted\");",
+							"});",
+							"",
+							"",
+							"pm.environment.unset(\"tempClient\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test_changeTimeQueue",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "q",
+							"value": "Test_changeTimeQueue"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ecd3011d-36c1-4947-acdd-32723d164d2b",
+				"type": "text/javascript",
+				"exec": [
+					"var moment = require('moment');",
+					"pm.globals.set(\"utcnow\", moment().format(\"YYYY-MM-DD hh:mm:ss\"));",
+					"pm.globals.set(\"spacenow\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));",
+					"pm.environment.set(\"appointment_day\", moment().format(\"YYYY-MM-DD\"));",
+					"",
+					"pm.globals.set(\"randomInt-100\", _.random(1, 100));",
+					"pm.globals.set(\"randomInt-calendar\", _.random(10, 20));"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "3c6d0e15-0b0b-4b9d-9a73-63086329f4f3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,1391 @@
+{
+	"info": {
+		"_postman_id": "2fa8b620-c8a7-4b13-b15f-8d1554070ed1",
+		"name": "Test-CreateNewClients_positve",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01_login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "92ca5c00-399a-4372-a5ea-2baf329121a3",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.environment.set(\"my_cookie\", responseCookies);\r",
+							"let time = pm.variables.get(\"utcnow\");\r",
+							"console.log(\"Test time: \" + time);\r",
+							"console.log(\"Coocies received: \");\r",
+							"console.log( pm.environment.get(\"my_cookie\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "time_zone",
+							"value": "Asia/Jerusalem",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "aa@aa.aa",
+							"type": "text"
+						},
+						{
+							"key": "pass",
+							"value": "bestappever",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/check-login",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"check-login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b9b0451-2c1a-4acf-9a02-895f14aacb3f",
+						"exec": [
+							"",
+							"let JsonData = pm.response.json();",
+							"console.log(\"New test client, number: \" + JsonData + \" was created\");",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11_createClient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_createClient_{{$randomInt}}",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "12_check new Client creations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75fe30c7-a633-4bb9-a97c-ca3db3494b10",
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"let iDs = jsonData.map((i) => i.id);\r",
+							"let names = jsonData.map((i) => i.name);\r",
+							"console.log(\"Client id: \" + iDs + \" was created\"); \r",
+							"console.log(\"New client: \" + names + \" was created\"); \r",
+							"\r",
+							"\r",
+							"pm.test(\"Number a new clients 'Test_createClient' to equal 10 \", function () {\r",
+							"    pm.expect(iDs.length).to.eql(10);\r",
+							"\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Clients name = 'Test_createClient'\", function () {\r",
+							"    for(i = 0; i < jsonData.length; i++ ) {\r",
+							"    pm.expect(jsonData[i].name).to.include(\"Test_createClient_\");\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client status\" , function () {\r",
+							"   \r",
+							"    for(i = 0; i < jsonData.length; i++ ) {\r",
+							"      pm.expect(jsonData[i].status).to.eql(\"status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½);\r",
+							"}\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client phone = 0547613154\" , function () {\r",
+							"    for(i = 0; i < jsonData.length; i++ ) {\r",
+							"      pm.expect(jsonData[i].phone).to.eql(\"0547613154\");\r",
+							"}\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_createClient",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "q",
+							"value": "Test_createClient"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "13_count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75fe30c7-a633-4bb9-a97c-ca3db3494b10",
+						"exec": [
+							"let JsonData = pm.response.json();\r",
+							"let iDs = JsonData.map((i) => i.id);\r",
+							"console.log(\"iDs = \" + iDs); \r",
+							"\r",
+							"pm.environment.set(\"IdArray_clients\", JSON.stringify(iDs));\r",
+							"\r",
+							"if(iDs.length === 0)\r",
+							"{\r",
+							"\r",
+							"    postman.setNextRequest(\"15_Check temp client deletion\");\r",
+							"    \r",
+							"}\r",
+							"else\r",
+							"{\r",
+							"    pm.environment.set(\"count\", 0);\r",
+							"}\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_createClient",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "q",
+							"value": "Test_createClient"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "14_delete temp clients",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "864291c5-7c58-4fd5-9bb7-5d5739a75db8",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray_clients\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[count]);",
+							"",
+							"count = count + 1; //next iteration",
+							"",
+							"if(count < iDs.length)",
+							"{",
+							"    postman.setNextRequest(\"14_delete temp clients\");",
+							"}",
+							"else ",
+							"{",
+							"    postman.setNextRequest(\"15_Check temp client deletion\"); // or next request name",
+							"} ",
+							"pm.environment.set(\"count\", count);",
+							"",
+							"// pm.environment.unset(\"IdArray_clients\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8af8f359-eda8-4e93-9906-7b70f1663169",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Old client was deleted\", function () {",
+							"    pm.response.to.have.body(\"\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "15_Check temp client deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79de03ff-ac6a-425d-82b2-8cb5b060aebb",
+						"exec": [
+							" ",
+							" ",
+							"pm.test(\"Temp clients was deleted\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql([]);",
+							"    console.log(\"Temp client 'Test_createClient_', was deleted\");",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test_createClient_",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "q",
+							"value": "Test_createClient_"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

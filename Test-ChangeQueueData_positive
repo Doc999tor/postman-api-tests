@@ -1,0 +1,3745 @@
+{
+	"info": {
+		"_postman_id": "f6bef440-352e-40d5-9dd5-3ba844540fa2",
+		"name": "Test-ChangeQueueData_positive",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01_Login_positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "92ca5c00-399a-4372-a5ea-2baf329121a3",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.environment.set(\"my_cookie\", responseCookies);\r",
+							"let time = pm.variables.get(\"utcnow\");\r",
+							"console.log(\"Test time: \" + time);\r",
+							"console.log(\"Coocies received: \");\r",
+							"console.log( pm.environment.get(\"my_cookie\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "time_zone",
+							"value": "Asia/Jerusalem",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "aa@aa.aa",
+							"type": "text"
+						},
+						{
+							"key": "pass",
+							"value": "bestappever",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/check-login",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"check-login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02_count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11da201c-760f-4cfe-8c05-a0181e96a857",
+						"exec": [
+							"let JsonData = pm.response.json();\r",
+							"let iDs = JsonData.map((i) => i.id);\r",
+							"console.log(\"iDs = \" + iDs); \r",
+							"pm.environment.set(\"IdArray\", JSON.stringify(iDs));\r",
+							"\r",
+							"if(iDs.length === 0)\r",
+							"{\r",
+							"    postman.setNextRequest(\"04_create categories for test\");//next request will not be sent\r",
+							"}\r",
+							"else\r",
+							"{\r",
+							"    pm.environment.set(\"count\", 0);\r",
+							"}\r",
+							"\r",
+							"// console.log(iDs.length);\r",
+							"// console.log(iDs);\r",
+							"// console.log(pm.environment.get(\"count\"));\r",
+							"// console.log(pm.environment.get(\"IdArray\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03_Delete old queues",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "864291c5-7c58-4fd5-9bb7-5d5739a75db8",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[count]);",
+							"",
+							"count = count + 1; //next iteration",
+							"",
+							"if(count < iDs.length)",
+							"{",
+							"    postman.setNextRequest(\"03_Delete old queues\");",
+							"}",
+							"else ",
+							"{",
+							"    postman.setNextRequest(\"04_create categories for test\"); // or next request name",
+							"} ",
+							"pm.environment.set(\"count\", count);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8af8f359-eda8-4e93-9906-7b70f1663169",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04_create categories for test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e968d36-6fc3-42d3-b824-eece6f0930df",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							"",
+							" pm.variables.set(\"categories_id\", jsonData);",
+							" console.log(\"New category number: \" + jsonData);",
+							" ",
+							"",
+							"pm.test(\"New category was created, status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"}); ",
+							"",
+							"//  postman.setNextRequest",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "TestCategory",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": " 2019-06-16 21:41:25",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/catalog/services/categories",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"catalog",
+						"services",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05_create services for test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e968d36-6fc3-42d3-b824-eece6f0930df",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							"pm.environment.set(\"services_id\", jsonData);",
+							" console.log(\"New services number: \" + jsonData);",
+							"",
+							"pm.test(\"New service was created, status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"}); ",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Test טיפול services_changeData",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "50",
+							"type": "text"
+						},
+						{
+							"key": "color",
+							"value": "#3fb6dc",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "{{categories_id}}",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-06-16 22:00:00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/catalog/services",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"catalog",
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06_create temp client",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b9b0451-2c1a-4acf-9a02-895f14aacb3f",
+						"exec": [
+							"",
+							"let JsonData = pm.response.json();",
+							"console.log(\"New test client, Test-לקוח changeData: \" + JsonData + \" was created\");",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test-לקוח changeData",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07_Get id of test client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79de03ff-ac6a-425d-82b2-8cb5b060aebb",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							"",
+							" pm.environment.set(\"tempClient\", jsonData[0].id);",
+							" var t = pm.environment.get(\"tempClient\");",
+							" ",
+							"",
+							"pm.test(\"Clients name = 'Test-לקוח changeData'\", function () {",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"    pm.expect(jsonData[i].name).to.include(\"Test-לקוח changeData\");",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test-לקוח changeData",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "q",
+							"value": "Test-לקוח changeData"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08_Appointment 9",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"",
+							"",
+							"",
+							"// setTimeout(function(){}, 3000);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T09:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test טיפול services_changeData\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09_Appointment 10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"   "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T10:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test טיפול services_changeData\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10_Appointment 11",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"    // pm.sendRequest({",
+							"    //           url: \"https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
+							"    //           method: \"DELETE\"",
+							"    //       });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T11:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test טיפול services_changeData\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11_Appointment 12",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"    // pm.sendRequest({",
+							"    //           url: \"https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
+							"    //           method: \"DELETE\"",
+							"    //       });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T12:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test טיפול services_changeData\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "12_Appointment 13",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"    // pm.sendRequest({",
+							"    //           url: \"https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
+							"    //           method: \"DELETE\"",
+							"    //       });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T13:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test טיפול services_changeData\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "13_Appointment 14",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"}); "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T14:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test טיפול services_changeData\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "14_Appointment 15",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"    // pm.sendRequest({",
+							"    //           url: \"https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
+							"    //           method: \"DELETE\"",
+							"    //       });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T15:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test_changeDataQueue\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "15_Appointment 16",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"   "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T16:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test_changeDataQueue\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "16_Appointment 17",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"    "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T17:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test_changeDataQueue\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "17_Appointment 18",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"    "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T18:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test_changeDataQueue\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "18_Appointment 19",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"",
+							"pm.test(\"Appointment was created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});    ",
+							"    "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T19:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test_changeDataQueue\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note old / הערות ישנות",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "19_check  queues data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75fe30c7-a633-4bb9-a97c-ca3db3494b10",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"let iDs = jsonData.map((i) => i.id);",
+							"console.log(\"Created iDs = \" + iDs); ",
+							"",
+							"pm.test(\"Queue number = 11\" , function () {",
+							"   pm.expect(jsonData.length).to.eql(11);",
+							"});",
+							"",
+							"pm.test(\"Client name = 'Test-לקוח changeData'\", function () {",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"    pm.expect(jsonData[i].name).to.include(\"Test-לקוח changeData\");",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Client services = Test טיפול services_changeData\" , function () {",
+							"    var jsonData = pm.response.json();",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].services[0].name).to.eql(\"Test טיפול services_changeData\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Client services color\" , function () {",
+							"    var jsonData = pm.response.json();",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].services[0].color).to.eql(\"#3fb6dc\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Client phone = 0547613154\" , function () {",
+							"    ",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].phone).to.eql(\"0547613154\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Client birthdate = 06-26 \" , function () {",
+							"   ",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].birthdate).to.eql(\"06-26\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Queue note\" , function () {",
+							"   ",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].note).to.eql(\"note old / הערות ישנות\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Queue client status\" , function () {",
+							"   ",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].status).to.eql(\"status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½);",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Queue price\" , function () {",
+							"   ",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].total_price).to.eql(\"180\");",
+							"}",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "20_create new temp client",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b9b0451-2c1a-4acf-9a02-895f14aacb3f",
+						"exec": [
+							"",
+							"let JsonData = pm.response.json();",
+							"console.log(\"New test client, Test_changeDataQueue2: \" + JsonData + \" was created\");",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-25",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1986",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "рамат ган, роках 18",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "0537123456",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test-לקוח changeData 2",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "female",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "status2 - zxc זסב фыв 1234567890 !@#$%^&*()_+<>?:{}|",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "21_Get id of new temp client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79de03ff-ac6a-425d-82b2-8cb5b060aebb",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							"",
+							" pm.environment.set(\"tempClient2\", jsonData[0].id);",
+							" var t = pm.environment.get(\"tempClient2\");",
+							" ",
+							"",
+							"pm.test(\"Clients name = 'Test-לקוח changeData 2'\", function () {",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"    pm.expect(jsonData[i].name).to.include(\"Test-לקוח changeData 2\");",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test-לקוח changeData 2",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "q",
+							"value": "Test-לקוח changeData 2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "22_create categories for test2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e968d36-6fc3-42d3-b824-eece6f0930df",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							"",
+							" pm.variables.set(\"categories2_id\", jsonData);",
+							" console.log(\"New category number: \" + jsonData);",
+							" ",
+							"",
+							"pm.test(\"New category was created, status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"}); ",
+							"",
+							"//  postman.setNextRequest",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "TestCategory2",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": " 2019-06-16 21:41:25",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/catalog/services/categories",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"catalog",
+						"services",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "23_create services for test2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e968d36-6fc3-42d3-b824-eece6f0930df",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							" pm.variables.set(\"services2_id\", jsonData);",
+							" console.log(\"New services number: \" + jsonData);",
+							"",
+							"pm.test(\"New service was created, status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"}); ",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Test_טיפול_changeData 2",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "50",
+							"type": "text"
+						},
+						{
+							"key": "color",
+							"value": "#fff581",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "{{categories2_id}}",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-06-16 22:00:00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/catalog/services",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"catalog",
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "24_count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11da201c-760f-4cfe-8c05-a0181e96a857",
+						"exec": [
+							"let JsonData = pm.response.json();\r",
+							"let iDs = JsonData.map((i) => i.id);\r",
+							"let startA = JsonData.map((i) => i.start);\r",
+							"\r",
+							"pm.environment.set(\"IdArray\", JSON.stringify(iDs));\r",
+							"console.log(\"iDs = \" + iDs);\r",
+							"\r",
+							"if(iDs.length === 0)\r",
+							"{\r",
+							"    postman.setNextRequest(\"null\");\r",
+							"}\r",
+							"else\r",
+							"{\r",
+							"    pm.environment.set(\"count\", 0);\r",
+							"\r",
+							"}\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"// console.log(iDs.length);\r",
+							"// console.log(iDs);\r",
+							"// console.log(pm.environment.get(\"count\"));\r",
+							"// console.log(pm.environment.get(\"IdArray\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "25_ChangeData 9",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[0]);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 09:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T09:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "26_ChangeData 10",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[1]);",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 10:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T10:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "27_ChangeData 11",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[2]);",
+							" ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 11:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T11:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "28_ChangeData 12",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[3]);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 12:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T12:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "29_ChangeData 13",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[4]);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 13:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T13:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "30_ChangeData 14",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[5]);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 14:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T14:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "31_ChangeData 15",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[6]);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 15:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T15:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "32_ChangeData 16",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[7]);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 16:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T16:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "33_ChangeData 17",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[8]);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 17:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T17:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "34_ChangeData 18",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[9]);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 18:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T18:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "35_ChangeData 19",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62874803-e5bf-4996-9333-4f756c8d5239",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[10]);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "86f4caf5-d6c6-4366-b1d4-28b8c8e82818",
+						"exec": [
+							"console.log(\"Queue id to change: \" + pm.variables.get(\"task_id_list\"));",
+							"console.log(\"Time of queue: 19:00\")",
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T19:15:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient2}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": " 1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services2_id}},\"name\":\"Test_טיפול_changeData 2\",\"price\":\"50\",\"duration\":45,\"color\":\"#9A5FA0\",\"category\":{\"name\":\"TestCategory2\",\"id\":{{categories2_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "note2 - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "36_check new queue data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11da201c-760f-4cfe-8c05-a0181e96a857",
+						"exec": [
+							"var jsonData2 = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Queue number = 11\" , function () {",
+							"   pm.expect(jsonData2.length).to.eql(11);",
+							"});",
+							"",
+							"pm.test(\"Client name = Test-לקוח changeData 2\" , function () {",
+							"    for(i = 0; i < jsonData2.length; i++ ) {",
+							"    pm.expect(jsonData2[i].name).to.eql(\"Test-לקוח changeData 2\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Client services = Test_טיפול_changeData 2\" , function () {",
+							"   ",
+							"    for(i = 0; i < jsonData2.length; i++ ) {",
+							"      pm.expect(jsonData2[i].services[0].name).to.eql(\"Test_טיפול_changeData 2\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Client services color 2\" , function () {",
+							"    var jsonData = pm.response.json();",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].services[0].color).to.eql(\"#fff581\");",
+							"}",
+							"});",
+							"",
+							"",
+							"pm.test(\"Client phone 2 = 0537123456\" , function () {",
+							"    ",
+							"    for(i = 0; i < jsonData2.length; i++ ) {",
+							"      pm.expect(jsonData2[i].phone).to.eql(\"0537123456\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Client birthdate 2 = 06-25 \" , function () {",
+							"   ",
+							"    for(i = 0; i < jsonData2.length; i++ ) {",
+							"      pm.expect(jsonData2[i].birthdate).to.eql(\"06-25\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Queue note 2\" , function () {",
+							"   ",
+							"    for(i = 0; i < jsonData2.length; i++ ) {",
+							"      pm.expect(jsonData2[i].note).to.eql(\"note2 - ячс שדג @#№$₽* !+/\\\\>»)_-:) {[%π±|¦¶°¬~^½);",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Queue client status 2\" , function () {",
+							"   ",
+							"    for(i = 0; i < jsonData2.length; i++ ) {",
+							"      pm.expect(jsonData2[i].status).to.eql(\"status2 - zxc זסב фыв 1234567890 !@#$%^&*()_+<>?:{}|);",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Queue price 2\" , function () {",
+							"   ",
+							"    for(i = 0; i < jsonData2.length; i++ ) {",
+							"      pm.expect(jsonData2[i].total_price).to.eql(\"100\");",
+							"}",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "37_count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75fe30c7-a633-4bb9-a97c-ca3db3494b10",
+						"exec": [
+							"let JsonData = pm.response.json();\r",
+							"let iDs = JsonData.map((i) => i.id);\r",
+							"console.log(\"iDs = \" + iDs); \r",
+							"\r",
+							"pm.environment.set(\"IdArray_clients\", JSON.stringify(iDs));\r",
+							"\r",
+							"if(iDs.length === 0)\r",
+							"{\r",
+							"\r",
+							"    postman.setNextRequest(\"39_Check temp client deletion\");\r",
+							"    \r",
+							"}\r",
+							"else\r",
+							"{\r",
+							"    pm.environment.set(\"count\", 0);\r",
+							"}\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test-לקוח changeData ",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "q",
+							"value": "Test-לקוח changeData "
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "38_delete temp clients",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "864291c5-7c58-4fd5-9bb7-5d5739a75db8",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray_clients\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[count]);",
+							"",
+							"count = count + 1; //next iteration",
+							"",
+							"if(count < iDs.length)",
+							"{",
+							"    postman.setNextRequest(\"38_delete temp clients\");",
+							"}",
+							"else ",
+							"{",
+							"    postman.setNextRequest(\"39_Check temp client deletion\"); // or next request name",
+							"} ",
+							"pm.environment.set(\"count\", count);",
+							"",
+							"// pm.environment.unset(\"IdArray_clients\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8af8f359-eda8-4e93-9906-7b70f1663169",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Old client was deleted\", function () {",
+							"    pm.response.to.have.body(\"\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "39_Check temp client deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79de03ff-ac6a-425d-82b2-8cb5b060aebb",
+						"exec": [
+							" ",
+							" ",
+							"pm.test(\"Temp client was deleted\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql([]);",
+							"    console.log(\"Temp client was deleted\");",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test-לקוח changeData",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "q",
+							"value": "Test-לקוח changeData"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "40_delete  temp service",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "713af52e-7c20-4c33-a29a-beaaa5c2877a",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/catalog/services/{{services_id}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"catalog",
+						"services",
+						"{{services_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "41_delete  temp service2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "713af52e-7c20-4c33-a29a-beaaa5c2877a",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/catalog/services/categories/{{categories2_id}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"catalog",
+						"services",
+						"categories",
+						"{{categories2_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "f4d7d9a3-88ea-4f69-8c42-67f5f8e057f1",
+				"type": "text/javascript",
+				"exec": [
+					"var moment = require('moment');",
+					"pm.globals.set(\"utcnow\", moment().format(\"YYYY-MM-DD hh:mm:ss\"));",
+					"pm.globals.set(\"spacenow\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));",
+					"pm.environment.set(\"appointment_day\", moment().format(\"YYYY-MM-DD\"));",
+					"",
+					"pm.globals.set(\"randomInt-100\", _.random(1, 100));",
+					"pm.globals.set(\"randomInt-calendar\", _.random(10, 20));"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "1374ea45-bbe9-442e-a1d4-a119061e0f0e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

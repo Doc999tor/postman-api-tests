@@ -1,0 +1,976 @@
+{
+	"info": {
+		"_postman_id": "90ac6adc-62e6-4098-9c99-5ef3b773aa7a",
+		"name": "Test-DeleteQueue_positive",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01_Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab80aa2a-1bfc-4054-9f82-636063b5951e",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.environment.set(\"my_cookie\", responseCookies);\r",
+							"\r",
+							"let time = pm.variables.get(\"utcnow\");\r",
+							"\r",
+							"console.log(\"Coocies received: \");\r",
+							"console.log( pm.environment.get(\"my_cookie\"));\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "time_zone",
+							"value": "Asia/Jerusalem",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "aa@aa.aa",
+							"type": "text"
+						},
+						{
+							"key": "pass",
+							"value": "bestappever",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/check-login",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"check-login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02_Count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11da201c-760f-4cfe-8c05-a0181e96a857",
+						"exec": [
+							"let JsonData = pm.response.json();\r",
+							"let iDs = JsonData.map((i) => i.id);\r",
+							"\r",
+							"pm.environment.set(\"IdArray\", JSON.stringify(iDs));\r",
+							"console.log(\"Number of queues today for deletion is: \" + iDs.length);\r",
+							"\r",
+							"if(iDs.length === 0)\r",
+							"{\r",
+							"    postman.setNextRequest(\"04_Create client for test\");//next request will not be sent\r",
+							"}\r",
+							"else\r",
+							"{\r",
+							"    pm.environment.set(\"count\", 0);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03_Delete all queues",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "864291c5-7c58-4fd5-9bb7-5d5739a75db8",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[count]);",
+							"",
+							"count = count + 1; //next iteration",
+							"",
+							"if(count < iDs.length)",
+							"{",
+							"    postman.setNextRequest(\"03_Delete all queues\");",
+							"}",
+							"else ",
+							"{",
+							"    postman.setNextRequest(\"04_Create client for test\"); // or next request name",
+							"} ",
+							"pm.environment.set(\"count\", count);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8af8f359-eda8-4e93-9906-7b70f1663169",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{task_id_list}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04_Create client for test",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6954dc50-7a52-4e3a-9de3-7d28ea4bafde",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b9b0451-2c1a-4acf-9a02-895f14aacb3f",
+						"exec": [
+							"",
+							"let JsonData = pm.response.json();",
+							"console.log(\"New test client, id- \" + JsonData + \" ,was created\");",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permit_ads",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "06-26",
+							"type": "text"
+						},
+						{
+							"key": "birthyear",
+							"value": "1981",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-05-11 08:28:30",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " רמת גן, גליל 18 Israel",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "[\"0547613154\"]",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "QA_test{{$guid}}@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Test_deleteQueue",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "zxcvbnmasdfghjklqwertyuiop 1234567890 !@#$%^&*()_+<>?:\"{}|",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/clients",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create categories for test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e968d36-6fc3-42d3-b824-eece6f0930df",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							"",
+							" pm.variables.set(\"categories_id\", jsonData);",
+							" console.log(\"New category number: \" + jsonData);",
+							" ",
+							"",
+							"pm.test(\"New category was created, status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"}); ",
+							"",
+							"//  postman.setNextRequest",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "TestCategory",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": " 2019-06-16 21:41:25",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/catalog/services/categories",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"catalog",
+						"services",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create services for test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e968d36-6fc3-42d3-b824-eece6f0930df",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							" pm.variables.set(\"services_id\", jsonData);",
+							" console.log(\"New services number: \" + jsonData);",
+							"",
+							"pm.test(\"New service was created, status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"}); ",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Test_טיפול_deleteQueue",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "50",
+							"type": "text"
+						},
+						{
+							"key": "color",
+							"value": "#3fb6dc",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "{{categories_id}}",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "2019-06-16 22:00:00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/catalog/services",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"catalog",
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05_Get id of \"Test_deleteQueue client\"",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79de03ff-ac6a-425d-82b2-8cb5b060aebb",
+						"exec": [
+							" var jsonData = pm.response.json();",
+							"",
+							" pm.environment.set(\"tempClient\", jsonData[0].id);",
+							" var t = pm.environment.get(\"tempClient\");",
+							" ",
+							" ",
+							"pm.test(\"New client for deletion test - 'Test_deleteQueue' was created\", function () {",
+							"    pm.expect(jsonData[0].name).to.eql(\"Test_deleteQueue\");",
+							"    console.log(jsonData[0].name + \" client exists now\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test_deleteQueue",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "q",
+							"value": "Test_deleteQueue"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06_Create  queue in 12pm",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e284470-8fae-4ce3-b53b-69c652d7224d",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "37c122a3-bb93-461d-89f3-1a6d1d11fcd8",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Coocie}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}T12:00:00",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{tempClient}}",
+							"type": "text"
+						},
+						{
+							"key": "worker_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "total_price",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "services",
+							"value": "[{\"id\":{{services_id}},\"name\":\"Test_טיפול_deleteQueue\",\"price\":\"50\",\"duration\":45,\"color\":\"#3fb6dc\",\"category\":{\"name\":\"TestCategory\",\"id\":{{categories_id}}},\"count\":1}]",
+							"type": "text"
+						},
+						{
+							"key": "note",
+							"value": "{{utcnow}}",
+							"type": "text"
+						},
+						{
+							"key": "is_reminders_set",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "added",
+							"value": "{{spacenow}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://lista.atzma.im/calendar",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07_check queue data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1dce3954-fba0-4ae3-861f-252af70c4f6f",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"let iDs = jsonData.map((i) => i.id);",
+							"console.log(\"Created queue number = \" + iDs); ",
+							"pm.environment.set(\"delete_id\", iDs);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Queue number = 1\" , function () {",
+							"   pm.expect(jsonData.length).to.eql(1);",
+							"});",
+							"",
+							"pm.test(\"Client name = Test_deleteQueue \" , function () {",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"    pm.expect(jsonData[i].name).to.eql(\"Test_deleteQueue\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Services = 'Test_טיפול_deleteQueue'\" , function () {",
+							"    var jsonData = pm.response.json();",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].services[0].name).to.eql(\"Test_טיפול_deleteQueue\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Client phone = 0547613154\" , function () {",
+							"    var jsonData = pm.response.json();",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].phone).to.eql(\"0547613154\");",
+							"}",
+							"});",
+							"",
+							"pm.test(\"Client birthdate = 06-26 \" , function () {",
+							"    var jsonData = pm.response.json();",
+							"    for(i = 0; i < jsonData.length; i++ ) {",
+							"      pm.expect(jsonData[i].birthdate).to.eql(\"06-26\");",
+							"}",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "324775a2-f917-4c10-af2e-b30a26ed82c4",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08_Delete created queue",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "864291c5-7c58-4fd5-9bb7-5d5739a75db8",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8af8f359-eda8-4e93-9906-7b70f1663169",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar/{{delete_id}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar",
+						"{{delete_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09_Delete Temp client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f0a702b7-67e6-4825-a50f-081609330510",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients/{{tempClient}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients",
+						"{{tempClient}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete  temp service",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "713af52e-7c20-4c33-a29a-beaaa5c2877a",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/catalog/services/{{services_id}}",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"catalog",
+						"services",
+						"{{services_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10_Check deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11da201c-760f-4cfe-8c05-a0181e96a857",
+						"exec": [
+							"",
+							"",
+							"",
+							"pm.test(\"Queue deletion was successfully\", function () {",
+							"    var JsonData = pm.response.json();",
+							"    let iDs = JsonData.map((i) => i.id);",
+							"    pm.expect(iDs).to.eql([]);",
+							"    console.log(\"Number of queue today = 0\"); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{appointment_day}}%2000:00:00"
+						},
+						{
+							"key": "end",
+							"value": "{{appointment_day}}%2023:59:59"
+						},
+						{
+							"key": "worker_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11_Check temp client deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79de03ff-ac6a-425d-82b2-8cb5b060aebb",
+						"exec": [
+							" ",
+							" ",
+							"pm.test(\"Temp client was deleted\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql([]);",
+							"    console.log(\"Temp client 'Test_deleteQueue', was deleted\");",
+							"});",
+							"",
+							"",
+							"pm.environment.unset(\"tempClient\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test_deleteQueue",
+					"protocol": "https",
+					"host": [
+						"lista",
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "q",
+							"value": "Test_deleteQueue"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ecd3011d-36c1-4947-acdd-32723d164d2b",
+				"type": "text/javascript",
+				"exec": [
+					"var moment = require('moment');",
+					"pm.globals.set(\"utcnow\", moment().format(\"YYYY-MM-DD hh:mm:ss\"));",
+					"pm.globals.set(\"spacenow\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));",
+					"pm.environment.set(\"appointment_day\", moment().format(\"YYYY-MM-DD\"));",
+					"",
+					"pm.globals.set(\"randomInt-100\", _.random(1, 100));",
+					"pm.globals.set(\"randomInt-calendar\", _.random(10, 20));"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "3c6d0e15-0b0b-4b9d-9a73-63086329f4f3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
