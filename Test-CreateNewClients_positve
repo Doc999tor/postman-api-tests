@@ -57,9 +57,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/check-login",
+					"raw": "https://lista.atzma.im/check-login",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -177,9 +178,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -281,9 +283,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -385,9 +388,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -489,9 +493,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -593,9 +598,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -697,9 +703,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -801,9 +808,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -905,9 +913,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1009,9 +1018,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1113,9 +1123,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1161,9 +1172,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients?limit=20&offset=0&q=Test_createClient",
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_createClient",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1239,9 +1251,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1303,9 +1316,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients?limit=20&offset=0&q=Test_createClient",
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_createClient",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1366,9 +1380,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients?limit=20&offset=0&q=Test_createClient",
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_createClient",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1445,9 +1460,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1486,9 +1502,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients?limit=20&q=Test_createClient_",
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test_createClient_",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
