@@ -57,10 +57,9 @@
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/check-login",
+					"raw": "https://atzma.im/check-login",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -171,16 +170,16 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -275,16 +274,16 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -379,16 +378,16 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -483,16 +482,16 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -587,16 +586,16 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -691,16 +690,16 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -795,16 +794,16 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -899,16 +898,16 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -1003,16 +1002,16 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -1107,21 +1106,148 @@
 						},
 						{
 							"key": "status",
-							"value": "status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½",
-							"type": "text"
+							"value": "status статус סטטוס",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "https://lista.atzma.im/clients",
+					"raw": "https://atzma.im/clients",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
 					"path": [
 						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11da201c-760f-4cfe-8c05-a0181e96a857",
+						"exec": [
+							"let JsonData = pm.response.json();\r",
+							"let iDs = JsonData.map((i) => i.id);\r",
+							"console.log(\"iDs = \" + iDs); \r",
+							"pm.environment.set(\"IdArray_clients\", JSON.stringify(iDs));\r",
+							"\r",
+							"if(iDs.length === 0)\r",
+							"{\r",
+							"    postman.setNextRequest(\"create client status\");//next request will not be sent\r",
+							"}\r",
+							"else\r",
+							"{\r",
+							"    pm.environment.set(\"count\", 0);\r",
+							"}\r",
+							"\r",
+							"// console.log(iDs.length);\r",
+							"// console.log(iDs);\r",
+							"// console.log(pm.environment.get(\"count\"));\r",
+							"// console.log(pm.environment.get(\"IdArray\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://atzma.im/clients?limit=20&offset=0&q=Test_createClient",
+					"protocol": "https",
+					"host": [
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "q",
+							"value": "Test_createClient"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create client status",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c5b86450-9eaf-4d48-ad45-dd10712f0a42",
+						"exec": [
+							"count = +pm.environment.get(\"count\");",
+							"var iDs = JSON.parse(pm.environment.get(\"IdArray_clients\"));",
+							"",
+							"pm.variables.set(\"task_id_list\", iDs[count]);",
+							"",
+							"count = count + 1; //next iteration",
+							"",
+							"if(count < iDs.length)",
+							"{",
+							"    postman.setNextRequest(\"create client status\");",
+							"}",
+							"else ",
+							"{",
+							"    postman.setNextRequest(\"12_check new Client creations\"); // or next request name",
+							"} ",
+							"pm.environment.set(\"count\", count);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "status",
+							"value": "status статус סטטוס",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://atzma.im/clients/{{task_id_list}}",
+					"protocol": "https",
+					"host": [
+						"atzma",
+						"im"
+					],
+					"path": [
+						"clients",
+						"{{task_id_list}}"
 					]
 				}
 			},
@@ -1157,7 +1283,7 @@
 							"pm.test(\"Client status\" , function () {\r",
 							"   \r",
 							"    for(i = 0; i < jsonData.length; i++ ) {\r",
-							"      pm.expect(jsonData[i].status).to.eql(\"status - ячс שדג @#№$₽* !+/\\»)_-:) {[%π±|¦¶°¬~^½);\r",
+							"      pm.expect(jsonData[i].status).to.eql(\"status статус סטטוס\");\r",
 							"}\r",
 							"});\r",
 							"\r",
@@ -1177,10 +1303,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_createClient",
+					"raw": "https://atzma.im/clients?limit=20&offset=0&q=Test_createClient",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -1241,10 +1366,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test_createClient",
+					"raw": "https://atzma.im/clients?limit=20&offset=0&q=Test_createClient",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -1321,10 +1445,9 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
+					"raw": "https://atzma.im/clients/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
@@ -1363,10 +1486,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://lista.atzma.im/clients?limit=20&q=Test_createClient_",
+					"raw": "https://atzma.im/clients?limit=20&q=Test_createClient_",
 					"protocol": "https",
 					"host": [
-						"lista",
 						"atzma",
 						"im"
 					],
