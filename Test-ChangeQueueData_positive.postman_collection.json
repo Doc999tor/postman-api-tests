@@ -57,9 +57,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/check-login",
+					"raw": "https://lista.atzma.im/check-login",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -105,9 +106,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -180,9 +182,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -245,9 +248,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/catalog/services/categories",
+					"raw": "https://lista.atzma.im/catalog/services/categories",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -328,9 +332,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/catalog/services",
+					"raw": "https://lista.atzma.im/catalog/services",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -437,9 +442,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -479,9 +485,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients?timestamp=1566137526464&limit=40&offset=0&q=Test-%D7%9C%D7%A7%D7%95%D7%97%20changeData",
+					"raw": "https://lista.atzma.im/clients?timestamp=1566137526464&limit=40&offset=0&q=Test-%D7%9C%D7%A7%D7%95%D7%97%20changeData",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -547,9 +554,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients/{{tempClient}}",
+					"raw": "https://lista.atzma.im/clients/{{tempClient}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -622,9 +630,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients/{{tempClient}}/debts",
+					"raw": "https://lista.atzma.im/clients/{{tempClient}}/debts",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -725,9 +734,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -822,9 +832,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -848,7 +859,7 @@
 							"    pm.response.to.have.status(201);",
 							"});    ",
 							"    // pm.sendRequest({",
-							"    //           url: \"https://atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
+							"    //           url: \"https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
 							"    //           method: \"DELETE\"",
 							"    //       });"
 						],
@@ -922,9 +933,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -948,7 +960,7 @@
 							"    pm.response.to.have.status(201);",
 							"});    ",
 							"    // pm.sendRequest({",
-							"    //           url: \"https://atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
+							"    //           url: \"https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
 							"    //           method: \"DELETE\"",
 							"    //       });"
 						],
@@ -1022,9 +1034,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1048,7 +1061,7 @@
 							"    pm.response.to.have.status(201);",
 							"});    ",
 							"    // pm.sendRequest({",
-							"    //           url: \"https://atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
+							"    //           url: \"https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
 							"    //           method: \"DELETE\"",
 							"    //       });"
 						],
@@ -1122,9 +1135,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1218,9 +1232,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1244,7 +1259,7 @@
 							"    pm.response.to.have.status(201);",
 							"});    ",
 							"    // pm.sendRequest({",
-							"    //           url: \"https://atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
+							"    //           url: \"https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1\" + pm.environment.get(\"id\"),",
 							"    //           method: \"DELETE\"",
 							"    //       });"
 						],
@@ -1318,9 +1333,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1415,9 +1431,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1512,9 +1529,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1609,9 +1627,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1706,9 +1725,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar",
+					"raw": "https://lista.atzma.im/calendar",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1805,9 +1825,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -1881,9 +1902,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients/{{tempClient}}/timeline/debts?start=2019-07-21&end=2020-08-17",
+					"raw": "https://lista.atzma.im/clients/{{tempClient}}/timeline/debts?start=2019-07-21&end=2020-08-17",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2013,9 +2035,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients",
+					"raw": "https://lista.atzma.im/clients",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2055,9 +2078,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients?timestamp=1566146781741&limit=40&offset=0&q=Test-%D7%9C%D7%A7%D7%95%D7%97%20changeData%202",
+					"raw": "https://lista.atzma.im/clients?timestamp=1566146781741&limit=40&offset=0&q=Test-%D7%9C%D7%A7%D7%95%D7%97%20changeData%202",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2109,9 +2133,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients/{{tempClient2}}",
+					"raw": "https://lista.atzma.im/clients/{{tempClient2}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2184,9 +2209,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/clients/{{tempClient2}}/debts",
+					"raw": "https://lista.atzma.im/clients/{{tempClient2}}/debts",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2250,9 +2276,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/catalog/services/categories",
+					"raw": "https://lista.atzma.im/catalog/services/categories",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2333,9 +2360,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/catalog/services",
+					"raw": "https://lista.atzma.im/catalog/services",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2388,9 +2416,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2510,9 +2539,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2621,9 +2651,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2731,9 +2762,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2841,9 +2873,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -2951,9 +2984,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3061,9 +3095,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3171,9 +3206,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3281,9 +3317,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3391,9 +3428,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3501,9 +3539,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3611,9 +3650,10 @@
 					]
 				},
 				"url": {
-					"raw": "https://atzma.im/calendar/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/calendar/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3715,9 +3755,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
+					"raw": "https://lista.atzma.im/calendar?start={{appointment_day}}%2000:00:00&end={{appointment_day}}%2023:59:59&worker_id=1",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3791,9 +3832,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients/{{tempClient2}}/timeline/debts?start=2019-07-21&end=2020-08-17",
+					"raw": "https://lista.atzma.im/clients/{{tempClient2}}/timeline/debts?start=2019-07-21&end=2020-08-17",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3853,9 +3895,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients?limit=20&offset=0&q=Test-לקוח changeData ",
+					"raw": "https://lista.atzma.im/clients?limit=20&offset=0&q=Test-לקוח changeData ",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3932,9 +3975,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients/{{task_id_list}}",
+					"raw": "https://lista.atzma.im/clients/{{task_id_list}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -3973,9 +4017,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/clients?limit=20&q=Test-לקוח changeData",
+					"raw": "https://lista.atzma.im/clients?limit=20&q=Test-לקוח changeData",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -4016,9 +4061,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/catalog/services/{{services_id}}",
+					"raw": "https://lista.atzma.im/catalog/services/{{services_id}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
@@ -4051,9 +4097,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://atzma.im/catalog/services/categories/{{categories2_id}}",
+					"raw": "https://lista.atzma.im/catalog/services/categories/{{categories2_id}}",
 					"protocol": "https",
 					"host": [
+						"lista",
 						"atzma",
 						"im"
 					],
